@@ -5,7 +5,7 @@
 
 Name:          horde-kolab-filter
 Version:       0.1.8
-Release:       %mkrel 1
+Release:       %mkrel 2
 Summary:       Postfix filters for the Kolab server
 License:       LGPL
 Group:         Networking/Mail
@@ -13,7 +13,7 @@ Url:           http://pear.horde.org/index.php?package=%{prj}
 Source0:       %{prj}-%{version}.tgz
 Source1:       nl_NL.po
 BuildArch:     noarch
-Requires(pre): %{_bindir}/pear
+Requires(pre): php-pear
 Requires:      php-pear
 Requires:      php-pear-Net_LMTP
 Requires:      horde-framework
@@ -27,7 +27,7 @@ Requires:      php-pear-Net_SMTP
 Requires:      php-pear-Mail
 BuildRequires: php-pear
 BuildRequires: php-pear-channel-horde
-BuildRoot:      %{_tmppath}/%{name}-%{version}
+
 
 %description
 The filters provided by this package implement the Kolab server
