@@ -5,7 +5,7 @@
 
 Name:          horde-kolab-filter
 Version:       0.1.8
-Release:       %mkrel 2
+Release:       %mkrel 3
 Summary:       Postfix filters for the Kolab server
 License:       LGPL
 Group:         Networking/Mail
