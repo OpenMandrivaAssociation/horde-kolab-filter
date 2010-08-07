@@ -4,8 +4,8 @@
 %define peardir %(pear config-get php_dir 2> /dev/null)
 
 Name:          horde-kolab-filter
-Version:       0.1.8
-Release:       %mkrel 3
+Version:       0.1.9
+Release:       %mkrel 1
 Summary:       Postfix filters for the Kolab server
 License:       LGPL
 Group:         Networking/Mail
@@ -13,7 +13,7 @@ Url:           http://pear.horde.org/index.php?package=%{prj}
 Source0:       %{prj}-%{version}.tgz
 Source1:       nl_NL.po
 BuildArch:     noarch
-Requires(pre): php-pear
+Requires(pre): %{_bindir}/pear
 Requires:      php-pear
 Requires:      php-pear-Net_LMTP
 Requires:      horde-framework
@@ -25,9 +25,9 @@ Requires:      horde-util
 Requires:      kolab-server
 Requires:      php-pear-Net_SMTP
 Requires:      php-pear-Mail
+BuildRequires: horde-framework
 BuildRequires: php-pear
 BuildRequires: php-pear-channel-horde
-
 
 %description
 The filters provided by this package implement the Kolab server
@@ -106,7 +106,10 @@ fi
 %{peardir}/Horde/Kolab/Filter/Transport/lmtp.php
 %{peardir}/Horde/Kolab/Filter/Transport/smtp.php
 %{peardir}/Horde/Kolab/Filter/Transport/stdout.php
+%dir %{peardir}/Horde/Kolab/Resource
 %{peardir}/Horde/Kolab/Resource.php
+%{peardir}/Horde/Kolab/Resource/Epoch.php
+%{peardir}/Horde/Kolab/Resource/Itip.php
 %dir %{peardir}/Horde/Kolab/Test
 %{peardir}/Horde/Kolab/Test/Filter.php
 %dir %{peardir}/tests/Kolab_Filter
@@ -145,4 +148,6 @@ fi
 %{peardir}/tests/Kolab_Filter/Horde/Kolab/Filter/fixtures/vacation.ret
 %{peardir}/tests/Kolab_Filter/Horde/Kolab/Filter/fixtures/validation.eml
 %{peardir}/tests/Kolab_Filter/Horde/Kolab/Filter/fixtures/validation.ret
+%{peardir}/tests/Kolab_Filter/Horde/Kolab/Filter/fixtures/allday_invitation.eml
+
 
