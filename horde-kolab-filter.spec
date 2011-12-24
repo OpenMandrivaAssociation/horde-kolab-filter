@@ -1,3 +1,4 @@
+%define _requires_exceptions pear(PHPUnit/Framework.php)
 %define prj Kolab_Filter
 
 %define xmldir  %{_var}/lib/pear
@@ -5,7 +6,7 @@
 
 Name:          horde-kolab-filter
 Version:       0.1.9
-Release:       %mkrel 1
+Release:       %mkrel 2
 Summary:       Postfix filters for the Kolab server
 License:       LGPL
 Group:         Networking/Mail
@@ -68,7 +69,7 @@ fi
 %{xmldir}/%{prj}.xml
 %{_bindir}/kolabfilter
 %{_bindir}/kolabmailboxfilter
-%{_mandir}/man1/kolabfilter.1.lzma
+%{_mandir}/man1/kolabfilter.1.*
 %dir %{_docdir}/kolab
 %dir %{_docdir}/kolab/Kolab_Filter
 %{_docdir}/kolab/Kolab_Filter/COPYING
