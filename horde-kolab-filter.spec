@@ -26,7 +26,7 @@ Requires:      horde-util
 Requires:      kolab-server
 Requires:      php-pear-Net_SMTP
 Requires:      php-pear-Mail
-BuildRequires: horde-framework
+#BuildRequires: horde-framework
 BuildRequires: php-pear
 BuildRequires: php-pear-channel-horde
 
