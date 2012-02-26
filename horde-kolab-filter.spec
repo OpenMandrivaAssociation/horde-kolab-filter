@@ -1,153 +1,81 @@
 %define _requires_exceptions pear(PHPUnit/Framework.php)
-%define prj Kolab_Filter
+%define peardir %(pear config-get php_dir 2> /dev/null || echo %{_datadir}/pear)
+%define xmldir  /var/lib/pear
 
-%define xmldir  %{_var}/lib/pear
-%define peardir %(pear config-get php_dir 2> /dev/null)
-
-Name:          horde-kolab-filter
-Version:       0.1.9
-Release:       %mkrel 4
-Summary:       Postfix filters for the Kolab server
-License:       LGPL
-Group:         Networking/Mail
-Url:           http://pear.horde.org/index.php?package=%{prj}
-Source0:       %{prj}-%{version}.tgz
-Source1:       nl_NL.po
-BuildArch:     noarch
-Requires(pre): php-pear
-Requires:      php-pear-Net_LMTP
-Requires:      horde-framework
-Requires:      horde-icalendar
-Requires:      horde-argv
-Requires:      horde-mime
-Requires:      horde-notification
-Requires:      horde-util
-Requires:      kolab-server
-Requires:      php-pear-Net_SMTP
-Requires:      php-pear-Mail
-BuildRequires: horde-framework
-BuildRequires: php-pear
-BuildRequires: php-pear-channel-horde
+Summary:		Postfix filters for the Kolab server
+Name:		horde-kolab-filter
+Version: 	0.1.9
+Release: 	%mkrel 5
+License: 	LGPLv2.1
+Group:		Networking/Mail
+Source0: 	http://pear.horde.org/get/Kolab_Filter-%{version}.tgz
+URL: 		http://pear.horde.org/package/Kolab_Filter
+BuildRequires: 	php-pear >= 1.4.7
+Requires: 	horde >= 0.0.2
+Requires:	horde_icalendar >= 0.0.3
+Requires:	horde-argv
+Requires:	horde-mime >= 0.0.2
+Requires:	horde-util >= 0.0.2
+Requires:	horde-kolab-server >= 0.2.0
+Requires:	php-pear >= 1.4.0b1
+BuildRequires: 	php-pear >= 1.4.7
+BuildRequires: 	php-pear-channel-horde
+Requires: 	php-pear-channel-horde
+BuildArch: 	noarch
 
 %description
-The filters provided by this package implement the Kolab server
-resource management as well as some Kolab server sender policies.
+The filters provided by this package implement the Kolab
+ server resource management as well as some Kolab server sender
+ policies.
 
 %prep
-%setup -q -n %{prj}-%{version}
-%__cp %{SOURCE0} %{prj}-%{version}.tgz
+%setup -c -T
+pear -v -c pearrc \
+        -d php_dir=%{peardir} \
+        -d doc_dir=/docs \
+        -d bin_dir=%{_bindir} \
+        -d data_dir=%{peardir}/data \
+        -d test_dir=%{peardir}/tests \
+        -d ext_dir=%{_libdir} \
+        -s
 
 %build
 
 %install
-pear -d doc_dir=%{_docdir}/kolab \
-  install --packagingroot %{buildroot} --nodeps --offline %{prj}-%{version}.tgz
+rm -rf %{buildroot}
+pear -c pearrc install --nodeps --packagingroot %{buildroot} %{SOURCE0}
+        
+# Clean up unnecessary files
+rm pearrc
+rm %{buildroot}/%{peardir}/.filemap
+rm %{buildroot}/%{peardir}/.lock
+rm -rf %{buildroot}/%{peardir}/.registry
+rm -rf %{buildroot}%{peardir}/.channels
+rm %{buildroot}%{peardir}/.depdb
+rm %{buildroot}%{peardir}/.depdblock
 
-%__rm -rf %{buildroot}/%{peardir}/.{filemap,lock,registry,channels,depdb,depdblock}
+mv %{buildroot}/docs .
 
-%__mkdir_p %{buildroot}%{xmldir}
-%__cp %{_builddir}/package.xml %{buildroot}%{xmldir}/%{prj}.xml
 
-%__install -d -m 755 %{buildroot}%{_mandir}/man1
-%__mv %{buildroot}%{_docdir}/kolab/Kolab_Filter/man/man1/kolabfilter.1 %{buildroot}%{_mandir}/man1
-
+# Install XML package description
+mkdir -p %{buildroot}%{xmldir}
+tar -xzf %{SOURCE0} package.xml
+cp -p package.xml %{buildroot}%{xmldir}/Kolab_Filter.xml
 
 %clean
-%__rm -rf %{buildroot}
+rm -rf %{buildroot}
 
 %post
-pear install --nodeps --soft --force --register-only %{xmldir}/%{prj}.xml
+pear install --nodeps --soft --force --register-only %{xmldir}/Kolab_Filter.xml
 
 %postun
 if [ "$1" -eq "0" ]; then
-  pear uninstall --nodeps --ignore-errors --register-only pear.horde.org/%{prj}
+    pear uninstall --nodeps --ignore-errors --register-only pear.horde.org/Kolab_Filter
 fi
 
 %files
-%defattr(-, root, root)
-%{xmldir}/%{prj}.xml
-%{_bindir}/kolabfilter
-%{_bindir}/kolabmailboxfilter
-%{_mandir}/man1/kolabfilter.1.*
-%dir %{_docdir}/kolab
-%dir %{_docdir}/kolab/Kolab_Filter
-%{_docdir}/kolab/Kolab_Filter/COPYING
-%dir %{peardir}/data
-%dir %{peardir}/data/Kolab_Filter
-%dir %{peardir}/data/Kolab_Filter/locale
-%dir %{peardir}/data/Kolab_Filter/locale/de_DE
-%dir %{peardir}/data/Kolab_Filter/locale/de_DE/LC_MESSAGES
-%{peardir}/data/Kolab_Filter/locale/de_DE/LC_MESSAGES/Kolab_Filter.mo
-%dir %{peardir}/data/Kolab_Filter/locale/fr_FR
-%dir %{peardir}/data/Kolab_Filter/locale/fr_FR/LC_MESSAGES
-%{peardir}/data/Kolab_Filter/locale/fr_FR/LC_MESSAGES/Kolab_Filter.mo
-%dir %{peardir}/data/Kolab_Filter/locale/nl_NL
-%dir %{peardir}/data/Kolab_Filter/locale/nl_NL/LC_MESSAGES
-%{peardir}/data/Kolab_Filter/locale/nl_NL/LC_MESSAGES/Kolab_Filter.mo
-%dir %{peardir}/data/Kolab_Filter/po
-%{peardir}/data/Kolab_Filter/po/Kolab_Filter.pot
-%{peardir}/data/Kolab_Filter/po/de_DE.po
-%{peardir}/data/Kolab_Filter/po/fr_FR.po
-%{peardir}/data/Kolab_Filter/po/nl_NL.po
-%dir %{peardir}/Horde/Kolab
-%dir %{peardir}/Horde/Kolab/Filter
-%dir %{peardir}/Horde/Kolab/Filter/Transport
-%{peardir}/Horde/Kolab/Filter/Base.php
-%{peardir}/Horde/Kolab/Filter/Content.php
-%{peardir}/Horde/Kolab/Filter/Incoming.php
-%{peardir}/Horde/Kolab/Filter/Outlook.php
-%{peardir}/Horde/Kolab/Filter/Response.php
-%{peardir}/Horde/Kolab/Filter/Transport.php
-%{peardir}/Horde/Kolab/Filter/Transport/DovecotLDA.php
-%{peardir}/Horde/Kolab/Filter/Transport/LMTPTLS.php
-%{peardir}/Horde/Kolab/Filter/Transport/drop.php
-%{peardir}/Horde/Kolab/Filter/Transport/echo.php
-%{peardir}/Horde/Kolab/Filter/Transport/lda.php
-%{peardir}/Horde/Kolab/Filter/Transport/lmtp.php
-%{peardir}/Horde/Kolab/Filter/Transport/smtp.php
-%{peardir}/Horde/Kolab/Filter/Transport/stdout.php
-%dir %{peardir}/Horde/Kolab/Resource
-%{peardir}/Horde/Kolab/Resource.php
-%{peardir}/Horde/Kolab/Resource/Epoch.php
-%{peardir}/Horde/Kolab/Resource/Itip.php
-%dir %{peardir}/Horde/Kolab/Test
-%{peardir}/Horde/Kolab/Test/Filter.php
-%dir %{peardir}/tests/Kolab_Filter
-%dir %{peardir}/tests/Kolab_Filter/Horde
-%dir %{peardir}/tests/Kolab_Filter/Horde/Kolab
-%dir %{peardir}/tests/Kolab_Filter/Horde/Kolab/Filter
-%{peardir}/tests/Kolab_Filter/Horde/Kolab/Filter/AllTests.php
-%{peardir}/tests/Kolab_Filter/Horde/Kolab/Filter/ContentTest.php
-%{peardir}/tests/Kolab_Filter/Horde/Kolab/Filter/FilterTest.php
-%{peardir}/tests/Kolab_Filter/Horde/Kolab/Filter/IncomingTest.php
-%{peardir}/tests/Kolab_Filter/Horde/Kolab/Filter/LoadTest.php
-%{peardir}/tests/Kolab_Filter/Horde/Kolab/Filter/ResourceTest.php
-%dir %{peardir}/tests/Kolab_Filter/Horde/Kolab/Filter/fixtures
-%{peardir}/tests/Kolab_Filter/Horde/Kolab/Filter/fixtures/attendee_status_invitation.eml
-%{peardir}/tests/Kolab_Filter/Horde/Kolab/Filter/fixtures/empty2.ret
-%{peardir}/tests/Kolab_Filter/Horde/Kolab/Filter/fixtures/empty.eml
-%{peardir}/tests/Kolab_Filter/Horde/Kolab/Filter/fixtures/forged.eml
-%{peardir}/tests/Kolab_Filter/Horde/Kolab/Filter/fixtures/forged.ret
-%{peardir}/tests/Kolab_Filter/Horde/Kolab/Filter/fixtures/forged_trans.ret
-%{peardir}/tests/Kolab_Filter/Horde/Kolab/Filter/fixtures/invitation_forward.eml
-%{peardir}/tests/Kolab_Filter/Horde/Kolab/Filter/fixtures/invitation_forward.ret
-%{peardir}/tests/Kolab_Filter/Horde/Kolab/Filter/fixtures/longstring_invitation.eml
-%{peardir}/tests/Kolab_Filter/Horde/Kolab/Filter/fixtures/null.ret
-%{peardir}/tests/Kolab_Filter/Horde/Kolab/Filter/fixtures/privileged.ret
-%{peardir}/tests/Kolab_Filter/Horde/Kolab/Filter/fixtures/recur_invitation.eml
-%{peardir}/tests/Kolab_Filter/Horde/Kolab/Filter/fixtures/recur_invitation2.eml
-%{peardir}/tests/Kolab_Filter/Horde/Kolab/Filter/fixtures/recur_invitation.ret
-%{peardir}/tests/Kolab_Filter/Horde/Kolab/Filter/fixtures/simple2.ret
-%{peardir}/tests/Kolab_Filter/Horde/Kolab/Filter/fixtures/simple.eml
-%{peardir}/tests/Kolab_Filter/Horde/Kolab/Filter/fixtures/simple_out.ret
-%{peardir}/tests/Kolab_Filter/Horde/Kolab/Filter/fixtures/simple.ret
-%{peardir}/tests/Kolab_Filter/Horde/Kolab/Filter/fixtures/test.eml
-%{peardir}/tests/Kolab_Filter/Horde/Kolab/Filter/fixtures/tiny.eml
-%{peardir}/tests/Kolab_Filter/Horde/Kolab/Filter/fixtures/tiny.ret
-%{peardir}/tests/Kolab_Filter/Horde/Kolab/Filter/fixtures/vacation.eml
-%{peardir}/tests/Kolab_Filter/Horde/Kolab/Filter/fixtures/vacation.ret
-%{peardir}/tests/Kolab_Filter/Horde/Kolab/Filter/fixtures/validation.eml
-%{peardir}/tests/Kolab_Filter/Horde/Kolab/Filter/fixtures/validation.ret
-%{peardir}/tests/Kolab_Filter/Horde/Kolab/Filter/fixtures/allday_invitation.eml
-
-
+%defattr(-,root,root)
+%doc docs/Kolab_Filter/*
+%{peardir}/*
+%{_bindir}/*
+%{xmldir}/Kolab_Filter.xml
