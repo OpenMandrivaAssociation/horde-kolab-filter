@@ -1,11 +1,11 @@
-%define _requires_exceptions pear(PHPUnit/Framework.php)
+%define _requires_exceptions pear(PHPUnit/Framework.php)\\|pear(PHPUnit/Extensions/PerformanceTestCase.php)
 %define peardir %(pear config-get php_dir 2> /dev/null || echo %{_datadir}/pear)
 %define xmldir  /var/lib/pear
 
 Summary:		Postfix filters for the Kolab server
 Name:		horde-kolab-filter
 Version: 	0.1.9
-Release: 	%mkrel 5
+Release: 	%mkrel 6
 License: 	LGPLv2.1
 Group:		Networking/Mail
 Source0: 	http://pear.horde.org/get/Kolab_Filter-%{version}.tgz
