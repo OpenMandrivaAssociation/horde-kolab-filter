@@ -5,14 +5,14 @@
 Summary:		Postfix filters for the Kolab server
 Name:		horde-kolab-filter
 Version: 	0.1.9
-Release: 	%mkrel 6
+Release: 	%mkrel 7
 License: 	LGPLv2.1
 Group:		Networking/Mail
 Source0: 	http://pear.horde.org/get/Kolab_Filter-%{version}.tgz
 URL: 		http://pear.horde.org/package/Kolab_Filter
 BuildRequires: 	php-pear >= 1.4.7
 Requires: 	horde >= 0.0.2
-Requires:	horde_icalendar >= 0.0.3
+Requires:	horde-icalendar >= 0.0.3
 Requires:	horde-argv
 Requires:	horde-mime >= 0.0.2
 Requires:	horde-util >= 0.0.2
