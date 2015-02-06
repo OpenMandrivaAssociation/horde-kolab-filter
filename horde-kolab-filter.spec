@@ -6,7 +6,7 @@ Summary:		Postfix filters for the Kolab server
 
 Name:		horde-kolab-filter
 Version: 	0.1.9
-Release: 	9
+Release: 	10
 License: 	LGPLv2.1
 Group:		Networking/Mail
 Source0: 	http://pear.horde.org/get/Kolab_Filter-%{version}.tgz
