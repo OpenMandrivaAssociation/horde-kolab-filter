@@ -10,7 +10,7 @@ Release: 	10
 License: 	LGPLv2.1
 Group:		Networking/Mail
 Source0: 	http://pear.horde.org/get/Kolab_Filter-%{version}.tgz
-URL: 		http://pear.horde.org/package/Kolab_Filter
+URL: 		https://pear.horde.org/package/Kolab_Filter
 BuildRequires: 	php-pear >= 1.4.7
 Requires: 	horde >= 0.0.2
 Requires:	horde-icalendar >= 0.0.3
